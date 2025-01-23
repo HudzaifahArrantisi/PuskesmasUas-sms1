@@ -176,7 +176,7 @@
                         </tr>
                     </thead>
                     <tbody id="pasienTableBody" class="text-gray-700">
-                        <!-- Data pasien akan ditampilkan di sini -->
+                        <!-- Data pasien -->
                     </tbody>
                 </table>
             </div>
@@ -184,7 +184,7 @@
     </div>
 
     <script>
-        let pasienList = [];
+        let pasienList = JSON.parse(localStorage.getItem('pasienList')) || [];
 
         function addPasienToTable(pasien) {
             const tableBody = document.getElementById('pasienTableBody');
@@ -200,6 +200,12 @@
             tableBody.appendChild(row);
         }
 
+        function loadPasienFromLocalStorage() {
+            pasienList.forEach(pasien => {
+                addPasienToTable(pasien);
+            });
+        }
+
         document.getElementById('pasienForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
@@ -213,24 +219,25 @@
 
             pasienList.push(pasien);
 
+            localStorage.setItem('pasienList', JSON.stringify(pasienList));
+
             addPasienToTable(pasien);
 
             e.target.reset();
         });
+
+        document.addEventListener('DOMContentLoaded', loadPasienFromLocalStorage);
     </script>
 
-    <!-- Script untuk Navbar Mobile -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const hamburger = document.getElementById('hamburger');
             const mobileMenu = document.getElementById('mobile-menu');
 
-            // Toggle menu saat tombol hamburger diklik
             hamburger.addEventListener('click', function () {
                 mobileMenu.classList.toggle('hidden');
             });
 
-            // Tutup menu saat mengklik di luar menu
             document.addEventListener('click', function (event) {
                 if (!mobileMenu.contains(event.target) && !hamburger.contains(event.target)) {
                     mobileMenu.classList.add('hidden');
